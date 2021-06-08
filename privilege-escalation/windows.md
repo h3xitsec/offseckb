@@ -42,3 +42,8 @@ impersonate_token "BUILTIN\Administrator"
 ps
 migrate pid
 ```
+
+## Links
+___
+### Guides
+- https://lolbas-project.github.io/

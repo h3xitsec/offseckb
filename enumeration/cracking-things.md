@@ -50,6 +50,7 @@ hydra -P /usr/share/wordlists/rockyou.txt -l admin www.domain.tld http-post-form
 ___
 ### Guides
 - https://github.com/frizb/Hydra-Cheatsheet
+- https://github.com/DidierStevens/DidierStevensSuite/blob/master/xor-kpa.py
 
 ### Writeups
 - 

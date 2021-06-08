@@ -125,6 +125,8 @@ ___
 - https://book.hacktricks.xyz/linux-unix/privilege-escalation
 - https://book.hacktricks.xyz/linux-unix/privilege-escalation/wildcards-spare-tricks
 - https://www.helpnetsecurity.com/2014/06/27/exploiting-wildcards-on-linux/
+- https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md
+- https://gtfobins.github.io/
 
 ### Writeups
 - https://blog.tryhackme.com/skynet-writeup/

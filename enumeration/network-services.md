@@ -27,3 +27,11 @@ ___
 ```sh
 nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse 0.0.0.0
 ```
+
+## Links
+___
+### Guides
+- https://www.hackingarticles.in/smb-penetration-testing-port-445/
+
+### Writeups
+- 
