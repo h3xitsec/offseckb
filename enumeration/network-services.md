@@ -20,6 +20,14 @@ smbmap -H 0.0.0.0
 smbclient //0.0.0.0/share
 ```
 
+- Recursively download folder (in smbclient)
+```
+mask ""
+recurse ON
+prompt OFF
+mget *
+```
+
 ## NFS
 ___
 ### NMap

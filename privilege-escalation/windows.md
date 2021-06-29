@@ -33,6 +33,11 @@ whoami /priv
 - SeTakeOwnershipPrivilege
 - SeDebugPrivilege
 
+### Search for local exploit using Metasploit
+```sh
+use post/multi/recon/local_exploit_suggester
+```
+
 ### Meterpreter Incognito module
 ```sh
 load incognito

