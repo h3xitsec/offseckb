@@ -8,7 +8,7 @@
 /usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 3000
 !mona pattern_create 3000
 ```
-- After crash, note EIP value then identity the offset:
+- After crash, note EIP value then identify the offset:
 ```
 /usr/share/metasploit-framework/tools/exploit/pattern_offset.rb -q 39654138
 [*] Exact match at offset 2012
