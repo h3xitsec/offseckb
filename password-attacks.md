@@ -1,4 +1,4 @@
-# Cracking
+# Password attacks
 ## john
 - Crack password protected zip archives
 ```bash
@@ -20,8 +20,7 @@ john --format=NT --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 
 ## hashcat
-### cheat sheet
-#### attack modes
+- attack modes
 ```bash
 # dictionary attack
 -a0
@@ -34,21 +33,23 @@ john --format=NT --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 # hybrid mask+wordlist
 -a7
 ```
-#### hash types
+- hash types
 ```bash
 # jwt
 -m 16500
 ```
-#### mask attack
-##### Builtin charset
-?l = abcdefghijklmnopqrstuvwxyz
-?u = ABCDEFGHIJKLMNOPQRSTUVWXYZ
-?d = 0123456789
-?h = 0123456789abcdef
-?H = 0123456789ABCDEF
-?s = «space»!"#$%&'()*
-?a = ?l?u?d?s
-?b = 0x00 - 0xff
+
+### mask attack
+| code | chars                      |
+| ---- | -------------------------- |
+| ?l   | abcdefghijklmnopqrstuvwxyz |
+| ?u   | ABCDEFGHIJKLMNOPQRSTUVWXYZ |
+| ?d   | 0123456789                 |
+| ?h   | 0123456789abcdef           |
+| ?H   | 0123456789ABCDEF           |
+| ?s   | «space»!"#$%&'()*          |
+| ?a   | ?l?u?d?s                   |
+| ?b   | 0x00 - 0xff                |
 
 ```bash
 # define custom charset
@@ -58,6 +59,7 @@ john --format=NT --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 # command
 -a3 -1 ?h?H?d ?1?1?1
 ```
+
 ### HS256 JWT secret
 ```bash
 # mask attack 4-12 char [a-z0-9]
