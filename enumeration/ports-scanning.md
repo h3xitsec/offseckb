@@ -54,6 +54,11 @@ nc -zv 127.0.0.1 1-65535
 ```
 
 ## rustscan
+- scan all ports
 ```bash
 rustscan -a 0.0.0.0 -r 1-65535 --ulimit 5000
+```
+- scan all ports + os/service discovery and scripts by nmap
+```bash
+rustscan -a 0.0.0.0 -r 1-65535 --ulimit 5000 -- -A -sC
 ```
