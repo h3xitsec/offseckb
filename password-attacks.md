@@ -87,11 +87,11 @@ run
 # Brute forcing
 ## Hydra
 - Bruteforce login/password combination
-```
+```bash
 hydra -L /usr/share/wordlists/rockyou.txt -P /usr/share/wordlists/rockyou.txt <hostname> http-post-form "/path/to/login:<username field name>=^USER^&<password field name>=^PASS^:<error string>"
 ```
 - Find password for a known user
-```
+```bash
 hydra -P /usr/share/wordlists/rockyou.txt -l admin www.domain.tld http-post-form "/path/to/login.php:<username field name>=^USER^&<password field name>=^PASS^:<error string>"
 ```
 
