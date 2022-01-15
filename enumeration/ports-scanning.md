@@ -36,6 +36,10 @@ sudo nmap -PU -sn 10.0.0.0/24
 ```sh
 sudo nmap -sV -sC --script vuln -oN out.nmap 0.0.0.0
 ```
+- dhcp discovery
+```bash
+sudo nmap --script broadcast-dhcp-discover
+```
 
 ## nmapAutomator
 - Fast port scan

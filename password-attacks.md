@@ -20,6 +20,11 @@ john --format=NT --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 
 ## hashcat
+- Crack Windows hash
+```bash
+# Format: ffb43f0de35be4d9917ac0cc8ad57f8d
+hashcat -m 0 -a 0 ./hash.txt /opt/wordlists/rockyou.txt
+```
 - attack modes
 ```bash
 # dictionary attack
@@ -35,6 +40,8 @@ john --format=NT --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
 ```
 - hash types
 ```bash
+# md5
+-m 0
 # jwt
 -m 16500
 ```
