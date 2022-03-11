@@ -1,3 +1,8 @@
+## oneliners
+- find open redirect vulnerabilities
+```
+echo "https://www.domain.com/" | waybackurls | httpx -silent -threads 100 | gf redirect | anew vuln.txt
+```
 ## ffuf
 - basic content discovery
 ```bash

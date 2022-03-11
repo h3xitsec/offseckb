@@ -40,6 +40,11 @@ sudo nmap -sV -sC --script vuln -oN out.nmap 0.0.0.0
 ```bash
 sudo nmap --script broadcast-dhcp-discover
 ```
+- vulnerability scanning
+```bash
+sudo nmap -Pn -O -sC -sV -p xxxx,xxxx 
+-oA output.txt $ip
+```
 
 ## nmapAutomator
 - Fast port scan

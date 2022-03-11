@@ -6,14 +6,13 @@ crackmapexec smb $ip --shares -u user -p password
 ### nmap
 - list shares
 ```sh
-nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse 0.0.0.0
+nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse $ip
 ```
 
 ### enum4linux
 - enumerate shares
 ```bash
 enum4linux -a -u "guest" -p "" $ip
-crackmapexec smb $ip --shares -u username -p password
 ```
 
 ### smbmap

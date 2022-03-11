@@ -69,7 +69,18 @@ python3 -c "import pty;pty.spawn('/bin/bash')"
 export TERM=xterm
 export SHELL=bash
 export TERM=xterm-256color
-stty rows 91 columns 190
+stty rows 50 columns 190
+```
+
+- If Ctrl-Cmd are needed (doesnt work well with meterpreter shell)
+
+```bash
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+# Then Ctrl-Z to background revshell
+export TERM=xterm
+export SHELL=bash
+export TERM=xterm-256color
+stty rows 50 columns 190
 ```
 
 ## Links
