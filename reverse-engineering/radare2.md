@@ -35,3 +35,18 @@ db 0x000000
 ```bash
 dc
 ```
+- show cpu registers
+```bash
+# show all registers
+dr
+# show eip register
+dr eip
+```
+- show strings in binary (equivalent to strings)
+```bash
+iz
+```
+- show basic infos
+```bash
+iq
+```

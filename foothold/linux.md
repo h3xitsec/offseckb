@@ -77,6 +77,7 @@ stty rows 50 columns 190
 ```bash
 python3 -c 'import pty;pty.spawn("/bin/bash")'
 # Then Ctrl-Z to background revshell
+stty raw -echo;fg
 export TERM=xterm
 export SHELL=bash
 export TERM=xterm-256color

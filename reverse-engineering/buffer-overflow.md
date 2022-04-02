@@ -1,3 +1,8 @@
+# Find EIP offset
+## gdb
+## r2
+## cmdline
+
 # Immunity Debugger + Mona
 - Set Mona Working Folder
 ```

