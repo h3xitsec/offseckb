@@ -63,29 +63,4 @@ payload
 python import gdb
 python gdb.execute('run')
 ```
-- find EIP offset
-```
-> run
-input:
-AAAAAAAAAAA
 
-> search-pattern AAAAAAAAAAA
-[+] Searching 'AAAAAAAA' in memory
-[+] In '[heap]'(0x804d000-0x806f000), permission=rw-
- 0x804d1a0 - 0x804d1aa → "AAAAAAAA\n" 
-[+] In '[stack]'(0xfffdd000-0xffffe000), permission=rw-
- 0xffffd00c - 0xffffd014 → "AAAAAAAA" 
-
->  i f
-Stack level 0, frame at 0xffffd080:
- eip = 0x804935a in vuln; saved eip = 0x80493dd
- called by frame at 0xffffd0b0
- Arglist at 0xffffcfec, args: 
- Locals at 0xffffcfec, Previous frame's sp is 0xffffd080
- Saved registers:
- ebx at 0xffffd074, ebp at 0xffffd078, eip at 0xffffd07c
-
-> python print(0xffffd07c - 0xffffd00c)
-112
-
-```
